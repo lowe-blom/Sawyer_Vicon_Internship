@@ -1,0 +1,9 @@
+# Ignore build and devel folders
+build/*
+devel/*
+
+# Ignore log files
+*.log
+
+# Ignore installation artifacts
+install/

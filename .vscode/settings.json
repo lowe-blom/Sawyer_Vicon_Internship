@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
+    },
+    "python.autoComplete.extraPaths": [
+        "/home/vicon-ros/ros_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/vicon-ros/ros_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ]
+}
