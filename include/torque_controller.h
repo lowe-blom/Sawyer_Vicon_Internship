@@ -45,7 +45,7 @@ namespace my_torque_controller
                 C = KDL::JntArray(N);
                 G = KDL::JntArray(N);
 
-                omega = 5; xi = 1; 
+                omega = 10; xi = 1; 
                 Kp = omega*omega;       // wn^2 - proportional gain
                 Kd = 2*omega*xi;        // 2*wn*xi - derivative gain
 

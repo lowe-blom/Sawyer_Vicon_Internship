@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     int selection = atoi(argv[1]);
 
     ros::Duration(2).sleep();
-    ros::Rate rate(10);
+    ros::Rate rate(20);
 
     switch(selection)
     {

@@ -5,7 +5,7 @@ namespace my_torque_controller
     void myTorqueControllerClass::gravityCompPublisher()
     {
         std_msgs::Empty empty_msg;
-        // gravityPub.publish(empty_msg);
+        gravityPub.publish(empty_msg);
         std::cout << "Gravity compensation empty message published" << std::endl;
     }
 
