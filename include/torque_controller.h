@@ -39,7 +39,7 @@ namespace my_torque_controller
 
                 qe = std::vector<double>(N); qe_d = std::vector<double>(N);
 
-                tau_d = std::vector<double>(N); tau_e = std::vector<double>(N);
+                tau_d = std::vector<double>(N); tau_e = std::vector<double>(N); tau_ext = std::vector<double>(N);
                 
                 M = KDL::JntSpaceInertiaMatrix(N);
                 C = KDL::JntArray(N);
@@ -114,6 +114,14 @@ namespace my_torque_controller
             void setDesiredTorque(std::vector<double> torques)
             {
                 tau_d = torques;
+            }
+
+            void calcExternalTorque(std::vector<double> torque_model)
+            {
+                for ( int i = 0; i < joint_efforts_.size(); i++)
+                {
+                    tau_ext[i] = joint_efforts_[i] - torque_model[i];
+                }
             }
 
 
@@ -287,7 +295,7 @@ namespace my_torque_controller
 
             std::vector<double> qe, qe_d;
 
-            std::vector<double> tau_d, tau_e;
+            std::vector<double> tau_d, tau_e, tau_ext;
 
             std::vector<double> torque_limits;
 
