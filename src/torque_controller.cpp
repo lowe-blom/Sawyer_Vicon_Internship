@@ -61,7 +61,7 @@ namespace my_torque_controller
             if (std::abs(torques[i]) > torque_limits[i]*SAFETY)
             {
                 std::cout << "Torque output outside of expected range. Scaling torque " << i << std::endl;
-                torques[i] = torque_limits[i]*SAFETY;
+                torques[i] = torque_limits[i]*SAFETY*getSign(torques[i]);
                 amplitude = false;
             }
         }
