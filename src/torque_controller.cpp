@@ -28,8 +28,8 @@ namespace my_torque_controller
 
     std::vector<double> myTorqueControllerClass::solveTorques()
     {
-        std::vector<double> torques;
-        KDL::JntArray tau(qe.size()), qd_dd_(qe.size()), qe_d_(qe.size()), qe_(qe.size()), q_(qe.size()), control(qe.size());
+        std::vector<double> torques, torques_model;
+        KDL::JntArray tau_model(qe.size()), tau(qe.size()), qd_dd_(qe.size()), qe_d_(qe.size()), qe_(qe.size()), q_(qe.size()), control(qe.size());
 
         qd_dd_ = vector2JntArray(qd_dd);
         qe_d_ = vector2JntArray(qe_d);
@@ -41,9 +41,13 @@ namespace my_torque_controller
         control.data = qd_dd_.data - Kd*qe_d_.data - Kp*qe_.data;
         tau.data = M.data*control.data + C.data + G.data;
 
+        tau_model.data = M.data*qd_dd_.data + C.data + G.data;
+
         torques = JntArray2vector(tau);
+        torques_model = JntArray2vector(tau_model);
 
         setDesiredTorque(torques);
+        calcExternalTorque(torques_model);
 
         return torques;
     }
