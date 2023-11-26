@@ -9,7 +9,7 @@ namespace my_torque_controller
         std::cout << "Gravity compensation empty message published" << std::endl;
     }
 
-    void myTorqueControllerClass::tauPublisher(ros::Publisher pub, tau)
+    void myTorqueControllerClass::tauPublisher(ros::Publisher pub, std::vector<double> tau)
     {
         std_msgs::Float64MultiArray msg;
         msg.data = tau;
@@ -56,6 +56,10 @@ namespace my_torque_controller
 
         setDesiredTorque(torques);
         calcExternalTorque(torques_model);
+        
+        tauPublisher(tauModelPub, torques_model);
+        tauPublisher(tauExtPub, tau_ext);
+        tauPublisher(tauControlPub, tau_d);
 
         return torques;
     }
