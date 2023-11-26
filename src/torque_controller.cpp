@@ -58,7 +58,7 @@ namespace my_torque_controller
             std::cout << "Torque input right_j" << i << ": " << torques[i] << std::endl;
             std::cout << "Current effort right_j" << i << ": " << joint_efforts_[i] << std::endl;
 
-            if (std::abs(tau_e[i]) > torque_limits[i]*SAFETY)
+            if (std::abs(torques[i]) > torque_limits[i]*SAFETY)
             {
                 std::cout << "Torque output outside of expected range. Scaling torque " << i << std::endl;
                 torques[i] = torque_limits[i]*SAFETY;
