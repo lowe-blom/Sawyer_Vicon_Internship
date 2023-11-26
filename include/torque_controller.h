@@ -265,6 +265,14 @@ namespace my_torque_controller
              */
             void printMatrixDimensions(const KDL::JntSpaceInertiaMatrix& matrix, const std::string& name);
 
+            /** Calculate the sign of a number
+             * 
+             * @brief Takes in a double and finds the sign of this number. Then returns either 1.0, -1.0 or 0.0
+             * 
+             * @return double Sign of input
+             */
+            double getSign(double num);
+
 
         private:
             ros::NodeHandle nh;
