@@ -140,10 +140,13 @@ namespace my_torque_controller
             /** Publishes a message with the tau_ext array to the measurement/tau_ext compensation topic
              * 
              * @brief Publishes a message with the tau_ext array to the measurement/tau_ext compensation topic
+             *
+             * @param ros::Publisher pub Publisher to send message to
+             * @param std::vector<double> tau Torque vector to be saved
              * 
              * @return void
              */
-            void tauPublisher();
+            void tauPublisher(ros::Publisher pub, std::vector<double> tau);
 
 
             /** Publishes the control mode message to the robot
