@@ -272,7 +272,7 @@ namespace my_torque_controller
         std::cout << "Matrix '" << name << "' has rows: " << matrix.rows() << ", columns: " << matrix.columns() << std::endl;
     }
 
-    double getSign(double num) 
+    double myTorqueControllerClass::getSign(double num) 
     {
         if (num > 0) {
             return 1.0;

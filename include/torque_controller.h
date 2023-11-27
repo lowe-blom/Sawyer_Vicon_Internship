@@ -18,9 +18,9 @@ namespace my_torque_controller
             {
                 controllerPub = nh.advertise<intera_core_msgs::JointCommand>("/robot/limb/right/joint_command", 10);
                 gravityPub = nh.advertise<std_msgs::Empty>("/robot/limb/right/suppress_gravity_compensation", 10);
-                tauExtPub = nh.advertise<std_msgs::Float64>("/measurement/tau_ext", 10);
-                tauControlPub = nh.advertise<std_msgs::Float64>("measurement/tau_control", 10);
-                tauModelPub = nh.advertise<std_msgs::Float64>("measurement/tau_model", 10);
+                tauExtPub = nh.advertise<std_msgs::Float64MultiArray>("/measurement/tau_ext", 10);
+                tauControlPub = nh.advertise<std_msgs::Float64MultiArray>("measurement/tau_control", 10);
+                tauModelPub = nh.advertise<std_msgs::Float64MultiArray>("measurement/tau_model", 10);
 
                 jointStateSub = nh.subscribe("/robot/joint_states", 50, &myTorqueControllerClass::jointStateCallback, this);
                 std::string robot_desc_string;

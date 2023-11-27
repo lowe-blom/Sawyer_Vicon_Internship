@@ -11,6 +11,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <std_msgs/Empty.h>
+#include <std_msgs/Float64MultiArray.h>
 #include <intera_core_msgs/IOComponentCommand.h> 
 #include <intera_core_msgs/IODeviceStatus.h>
 #include <intera_core_msgs/JointCommand.h>

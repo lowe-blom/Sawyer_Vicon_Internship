@@ -75,12 +75,6 @@ namespace my_planning
             std::vector<double> joint_accelerations = trajectory_points[i].accelerations;
 
             // Do something with the position, velocity, and acceleration data
-            // For example, print them
-            ROS_INFO("Point %zu - Positions: %s, Velocities: %s, Accelerations: %s",
-                    i,
-                    joint_positions[1],
-                    joint_velocities[1],
-                    joint_accelerations[1]);
         }
     }
 
