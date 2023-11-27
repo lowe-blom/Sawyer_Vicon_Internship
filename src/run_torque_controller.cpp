@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     switch(selection)
     {
         case 1: // Torque control
-            my_torque_controller_.setTrajectory();
+            my_torque_controller_.setInitTrajectory();
             my_torque_controller_.setDesiredTorque(my_torque_controller_.getInitTorques());
             ros::Duration(1.0).sleep();
             my_torque_controller_.printStates();
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
             ros::Duration(2).sleep();
             while (ros::ok())
             {
-                // my_torque_controller_.setTrajectory(target_q, target_qd);
+                // my_torque_controller_.updateTrajectory(target_q, target_qd);
                 my_torque_controller_.printControllerInfo();
                 my_torque_controller_.gravityCompPublisher();
                 my_torque_controller_.torqueControlPublisher();

@@ -8,7 +8,7 @@
 #define TORQUE_MODE 3
 #define TRAJECTORY_MODE 4
 
-#define SAFETY 0.4
+#define SAFETY 0.5
 
 namespace my_torque_controller
 {
@@ -87,7 +87,7 @@ namespace my_torque_controller
                 return joint_efforts_;
             }
 
-            void setTrajectory()
+            void setInitTrajectory()
             {
                 for (int i = 0; i < joint_positions_.size(); i++)
                 {
@@ -95,6 +95,7 @@ namespace my_torque_controller
                     qd_d[i] = 0.0;
                     qd_dd[i] = 0.0;
                 }
+                q_init = joint_positions_;
             }
 
             void setTrajectory(std::vector<double> target_q, std::vector<double> target_qd)
@@ -103,6 +104,16 @@ namespace my_torque_controller
                 {
                     qd[i] = target_q[i];
                     qd_d[i] = target_qd[i];
+                    qd_dd[i] = 0.0;
+                }
+            }
+
+            void updateTrajectory(std::vector<double> q_offset, std::vector<double> qd_offset)
+            {
+                for (int i = 0; i < qd.size(); i++)
+                {
+                    qd[i] = q_init[i] + q_offset[i];
+                    qd_d[i] = 0.0 + qd_offset[i];
                     qd_dd[i] = 0.0;
                 }
             }
@@ -137,9 +148,9 @@ namespace my_torque_controller
             void gravityCompPublisher();
 
 
-            /** Publishes a message with the tau_ext array to the measurement/tau_ext compensation topic
+            /** Publishes a message with a tau array to the specified topic
              * 
-             * @brief Publishes a message with the tau_ext array to the measurement/tau_ext compensation topic
+             * @brief Publishes a message with a tau array to the specified topic
              *
              * @param ros::Publisher pub Publisher to send message to
              * @param std::vector<double> tau Torque vector to be saved
@@ -314,6 +325,7 @@ namespace my_torque_controller
             std::vector<double> tau_d, tau_e, tau_ext;
 
             std::vector<double> torque_limits;
+            std::vector<double> q_init;
 
             KDL::JntSpaceInertiaMatrix M;
             KDL::JntArray C;

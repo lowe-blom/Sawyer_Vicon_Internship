@@ -14,7 +14,6 @@ namespace my_torque_controller
         std_msgs::Float64MultiArray msg;
         msg.data = tau;
 
-        // Publish the message
         pub.publish(msg);
     }
 
