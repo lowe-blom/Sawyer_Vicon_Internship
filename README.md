@@ -32,13 +32,19 @@ List of hardware and software requirements for running the project.
   - ...
 
 - Software:
-  - ROS (Robot Operating System)
-  - Python (Version X.X)
+  - ROS 1: Melodic or Noetic (Robot Operating System) 
+  - Python (Version 3)
   - ...
 
 ## Installation
 
 Step-by-step instructions on how to install and set up the project.
+
+1. Create ROS workspace
+2. Install packages:
+    - [InteraSDK](https://support.rethinkrobotics.com/support/solutions/articles/80000980134-workstation-setup)
+    - [Gazebo Simulator](https://support.rethinkrobotics.com/support/solutions/articles/80000980381-gazebo-tutorial)
+    - [MoveIt](https://support.rethinkrobotics.com/support/solutions/articles/80000980338-moveit-tutorial)
 
 1. Clone the repository:
    ```bash
