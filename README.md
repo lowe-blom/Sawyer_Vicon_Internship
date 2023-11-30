@@ -35,7 +35,7 @@ List of hardware and software requirements for running the project. The installa
   - [Vicon Tracker](https://www.vicon.com/software/tracker/)
   - [Vicon bridge](http://wiki.ros.org/vicon_bridge)
   - [Vimba AVT](http://wiki.ros.org/avt_vimba_camera)
-  - [Vimba SDK]([https://www.alliedvision.com/en/products/software/](https://www.alliedvision.com/en/products/vimba-sdk/))
+  - [Vimba SDK](https://www.alliedvision.com/en/products/vimba-sdk/)
   - [Orocos KDL](https://github.com/orocos/orocos_kinematics_dynamics/blob/master/orocos_kdl/INSTALL.md)
 
 ## Installation
