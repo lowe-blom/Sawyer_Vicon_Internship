@@ -7,3 +7,6 @@ devel/*
 
 # Ignore installation artifacts
 install/
+
+# Ignore .vscode files
+./vscode/*

@@ -91,6 +91,36 @@ namespace my_torque_controller
         return torques;
     }
 
+    KDL::Frame myTorqueControllerClass::solveFKinematics(KDL::JntArray q)
+    {
+        KDL::Frame endEffectorFrame;
+
+        int result = FKSolver.JntToCart(q, endEffectorFrame);
+
+        if (result >= 0)
+        {
+            return endEffectorFrame;
+        } else 
+        {
+            ROS_ERROR("Error while calculating forwards kinematics.");
+        }
+    }
+
+    KDL::JntArray myTorqueControllerClass::solveIKinematics(KDL::Frame frame)
+    {
+        KDL::JntArray desiredJointPositions;
+
+        int result = ikSolverPos.CartToJnt(vector2JntArray(joint_positions_), frame, desiredJointPositions);
+
+        if (result >= 0)
+        {
+            return desiredJointPositions;
+        } else
+        {
+            ROS_ERROR("Error while calculating inverse kinematics.");
+        }
+    }
+
     void myTorqueControllerClass::printStates()
     {
         for (int i = 0; i < joint_names_.size(); i++)

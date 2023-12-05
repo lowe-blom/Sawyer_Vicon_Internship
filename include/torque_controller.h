@@ -14,7 +14,7 @@ namespace my_torque_controller
 {
     class myTorqueControllerClass
     {
-        public: myTorqueControllerClass() 
+        public: myTorqueControllerClass() : FKSolver(sawyerChain), ikSolverVel(sawyerChain), ikSolverPos(sawyerChain, FKSolver, ikSolverVel)
             {
                 controllerPub = nh.advertise<intera_core_msgs::JointCommand>("/robot/limb/right/joint_command", 10);
                 gravityPub = nh.advertise<std_msgs::Empty>("/robot/limb/right/suppress_gravity_compensation", 10);
@@ -23,6 +23,7 @@ namespace my_torque_controller
                 tauModelPub = nh.advertise<std_msgs::Float64MultiArray>("measurement/tau_model", 10);
 
                 jointStateSub = nh.subscribe("/robot/joint_states", 50, &myTorqueControllerClass::jointStateCallback, this);
+                jointLimitsSub = nh.subscribe("/robot/joint_limits", 1, &myTorqueControllerClass::jointLimitsCallback, this);
                 std::string robot_desc_string;
                 nh.param("robot_description", robot_desc_string, std::string());
                 
@@ -32,8 +33,7 @@ namespace my_torque_controller
                 }
 
                 joint_names_only_ = {"right_j0", "right_j1", "right_j2", "right_j3", "right_j4", "right_j5", "right_j6"};
-                torque_limits = {80.0, 80.0, 40.0, 40.0, 9.0, 9.0, 9.0, 8.0};
-
+                
                 int N = joint_names_only_.size();
 
                 joint_positions_ = std::vector<double>(N); joint_velocities_ = std::vector<double>(N); joint_efforts_ = std::vector<double>(N);
@@ -53,7 +53,7 @@ namespace my_torque_controller
                 Kd = 2*omega*xi;        // 2*wn*xi - derivative gain
 
                 checkLoadedTree();
-                sawyerChain = tree2chain(sawyer);
+                sawyerChain = tree2chain(sawyer);  
             }
             
             void jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
@@ -81,6 +81,29 @@ namespace my_torque_controller
                     tau_e[i] = joint_efforts_[i] - tau_d[i];
                 }
             }
+
+            void jointLimitsCallback(const intera_core_msgs::JointLimits::ConstPtr& msg)
+            {
+                joint_limits_lower.clear();
+                joint_limits_upper.clear();
+                velocity_limits.clear();
+                accel_limits.clear();
+                torque_limits.clear();
+
+                // Copy the data from the message to the corresponding vectors, excluding 'head_pan'
+                for (size_t i = 0; i < msg->joint_names.size(); ++i)
+                {
+                    if (msg->joint_names[i] != "head_pan")
+                    {
+                        joint_limits_lower.push_back(msg->position_lower[i]);
+                        joint_limits_upper.push_back(msg->position_upper[i]);
+                        velocity_limits.push_back(msg->velocity[i]);
+                        accel_limits.push_back(msg->accel[i]);
+                        torque_limits.push_back(msg->effort[i]);
+                    }
+                }
+            }
+
 
             std::vector<double> getInitTorques()
             {
@@ -189,6 +212,30 @@ namespace my_torque_controller
              * @return std::vector<double> scaled torques
              */
             std::vector<double> compareTorques(std::vector<double> torques);
+
+
+            /** Solves forwards kinematics for the sawyer chain
+             * 
+             * @brief Uses the sawyerChain object to calculate the end effector frame for a given joint array
+             * using forwards kinematics
+             * 
+             * @param KDL::JntArray q - The joint array that is used to calculate the ende effector position
+             * 
+             * @return KDL::Frame - The end effector frame for the given position
+             */
+            KDL::Frame solveFKinematics(KDL::JntArray q);
+
+
+            /** Solves inverse kinematics for the sawyer chain
+             * 
+             * @brief Uses the sawyerChain object to calculate the corresponding joint positions for a given end effector frame
+             * using inverse kinematics
+             * 
+             * @param KDL::Frame Frame - The end effector position
+             * 
+             * @return KDL::JntArray - The corresponding joint positions
+             */
+            KDL::JntArray solveIKinematics(KDL::Frame Frame);
 
 
             /** Checks if the tree is loaded correctly
@@ -313,10 +360,17 @@ namespace my_torque_controller
             ros::Subscriber jointStateSub;
             ros::Publisher controllerPub;
             ros::Publisher gravityPub;
+            ros::Subscriber jointLimitsSub;
             ros::Publisher tauExtPub, tauControlPub, tauModelPub;
 
             std::vector<std::string> joint_names_;
             std::vector<double> joint_positions_, joint_velocities_, joint_efforts_;
+
+            std::vector<double> joint_limits_lower;
+            std::vector<double> joint_limits_upper;
+            std::vector<double> velocity_limits;
+            std::vector<double> accel_limits;
+            std::vector<double> torque_limits;
 
             std::vector<double> qd, qd_d, qd_dd;
 
@@ -324,7 +378,7 @@ namespace my_torque_controller
 
             std::vector<double> tau_d, tau_e, tau_ext;
 
-            std::vector<double> torque_limits;
+            
             std::vector<double> q_init;
 
             KDL::JntSpaceInertiaMatrix M;
@@ -338,6 +392,10 @@ namespace my_torque_controller
 
             KDL::Tree sawyer;
             KDL::Chain sawyerChain;
+
+            KDL::ChainFkSolverPos_recursive FKSolver;
+            KDL::ChainIkSolverVel_pinv ikSolverVel;
+            KDL::ChainIkSolverPos_NR ikSolverPos; 
     };
 }
 
