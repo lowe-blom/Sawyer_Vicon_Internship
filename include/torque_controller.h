@@ -14,7 +14,7 @@ namespace my_torque_controller
 {
     class myTorqueControllerClass
     {
-        public: myTorqueControllerClass() : FKSolver(sawyerChain), ikSolverVel(sawyerChain), ikSolverPos(sawyerChain, FKSolver, ikSolverVel)
+        public: myTorqueControllerClass() : FKSolver(sawyerChain), ikSolverVel(sawyerChain), ikSolverPos(sawyerChain, FKSolver, ikSolverVel, maxiter, eps)
             {
                 controllerPub = nh.advertise<intera_core_msgs::JointCommand>("/robot/limb/right/joint_command", 10);
                 gravityPub = nh.advertise<std_msgs::Empty>("/robot/limb/right/suppress_gravity_compensation", 10);
@@ -108,6 +108,11 @@ namespace my_torque_controller
             std::vector<double> getInitTorques()
             {
                 return joint_efforts_;
+            }
+
+            std::vector<double> getInitPos()
+            {
+                return joint_positions_;
             }
 
             void setInitTrajectory()
@@ -396,6 +401,9 @@ namespace my_torque_controller
             KDL::ChainFkSolverPos_recursive FKSolver;
             KDL::ChainIkSolverVel_pinv ikSolverVel;
             KDL::ChainIkSolverPos_NR ikSolverPos; 
+
+            unsigned int maxiter = 500;
+            double eps = 1e-3;
     };
 }
 

@@ -45,8 +45,32 @@ int main(int argc, char **argv)
                 rate.sleep();
             }
             break;
-        case 2: 
-            
+        case 2: // Test kinematics
+            KDL::JntArray q = my_torque_controller_.vector2JntArray(my_torque_controller_.getInitPos());
+            std::cout << "Joint Array (q): ";
+            for (size_t i = 0; i < q.rows(); ++i) {
+                std::cout << q(i);
+                if (i < q.rows() - 1) {
+                    std::cout << ", ";
+                }
+            }
+            std::cout << std::endl;
+            KDL::Frame Frame = my_torque_controller_.solveFKinematics(q);
+            std::cout << "Translation Vector: " << Frame.p.x() << ", " << Frame.p.y() << ", " << Frame.p.z() << std::endl;
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    std::cout << Frame.M(i, j) << " ";
+                }
+                std::cout << std::endl;
+            }
+            KDL::JntArray q_ik = my_torque_controller_.solveIKinematics(Frame);
+            std::cout << "Joint Array (q_ik): ";
+            for (size_t i = 0; i < q_ik.rows(); ++i) {
+                std::cout << q_ik(i);
+                if (i < q_ik.rows() - 1) {
+                    std::cout << ", ";
+                }
+            }
             break;
     }
 

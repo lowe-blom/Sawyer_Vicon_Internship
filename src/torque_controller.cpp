@@ -109,8 +109,13 @@ namespace my_torque_controller
     KDL::JntArray myTorqueControllerClass::solveIKinematics(KDL::Frame frame)
     {
         KDL::JntArray desiredJointPositions;
+        // KDL::JntArray guess = vector2JntArray(joint_positions_);
+        std::vector<double> vecGuess = {0.0, -1.2, 0.00, 2.1, 0.0, 0.5, 3.0};
+        KDL::JntArray guess = vector2JntArray(vecGuess);
 
-        int result = ikSolverPos.CartToJnt(vector2JntArray(joint_positions_), frame, desiredJointPositions);
+        int result = ikSolverPos.CartToJnt(guess, frame, desiredJointPositions);
+
+        std::cout << "Result of IK: " << result << std::endl;
 
         if (result >= 0)
         {
@@ -118,6 +123,14 @@ namespace my_torque_controller
         } else
         {
             ROS_ERROR("Error while calculating inverse kinematics.");
+            std::cout << "Frame: " << frame.p.x() << ", " << frame.p.y() << ", " << frame.p.z() << std::endl;
+            std::cout << "Joint Array (guess): ";
+            for (size_t i = 0; i < guess.rows(); ++i) {
+                std::cout << guess(i);
+                if (i < guess.rows() - 1) {
+                    std::cout << ", ";
+                }
+            }
         }
     }
 
@@ -170,8 +183,11 @@ namespace my_torque_controller
         int N = sawyerChain.getNrOfJoints();
         
         // Use current position and velocity to calculate torques (for verification)
-        KDL::JntArray q = vector2JntArray(joint_positions_);
-        KDL::JntArray q_dot = vector2JntArray(joint_velocities_);
+        // KDL::JntArray q = vector2JntArray(joint_positions_);
+        // KDL::JntArray q_dot = vector2JntArray(joint_velocities_);
+        
+        KDL::JntArray q = vector2JntArray(qd);
+        KDL::JntArray q_dot = vector2JntArray(qd_d);
 
         KDL::JntSpaceInertiaMatrix Mass(N);
         KDL::JntArray Coriolis(N);

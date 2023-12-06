@@ -1,5 +1,5 @@
-#ifndef INCLUDE_H
-#define INCLUDE_H
+// #ifndef INCLUDE_H
+// #define INCLUDE_H
 
 // Include file that includes main libraries used in the multiple files
 #include <frames.hpp>
@@ -32,7 +32,6 @@
 
 #include <kdl_parser/kdl_parser.hpp>
 #include <chaindynparam.hpp>
-// #include "utilities/hash_combine.h"
 #include <chainfksolverpos_recursive.hpp>
 #include <chainiksolvervel_pinv.hpp>
 #include <chainiksolverpos_nr.hpp>
@@ -42,4 +41,4 @@
 #define DIST_THRESHOLD 0.1     // distance threshold for object detection
 #define ANGLE_THRESHOLD 0.1     // angle threshold for object detection (arbitrary??)
 
-#endif
+// #endif
